@@ -1,0 +1,96 @@
+@import "../../scss/variables.scss";
+
+.board {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  // background: $first-player;
+  background: $blue-marguerite;
+  border-radius: 20px;
+  border: 10px solid $blue-gem;
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    &_first:hover .board__cell_empty:has(+ .board__cell_first),
+    &_first:hover .board__cell_empty:has(+ .board__cell_second) {
+      background: $first-player;
+      opacity: 0.4;
+    }
+
+    &_second:hover .board__cell_empty:has(+ .board__cell_first),
+    &_second:hover .board__cell_empty:has(+ .board__cell_second) {
+      background: $second-player;
+      opacity: 0.4;
+    }
+  }
+
+  &__cell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    color: #ffffff;
+    background: #ffffff;
+    font-size: 0;
+    cursor: pointer;
+    transition: background-color, opacity 0.3s ease;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    &_empty {
+    }
+
+    &_first {
+      background: $first-player;
+      // box-shadow: inset 0 0px 6px 4px $first-player-2;
+
+      // background: #4a1db3;
+      // box-shadow: inset 0 0px 6px 4px #271455;
+
+      &::before {
+        background: $first-player;
+        box-shadow: inset 0 0px 6px 4px $first-player-2;
+        animation-duration: 1s;
+        animation-name: cell;
+      }
+    }
+
+    &_second {
+      background: $second-player;
+      // box-shadow: inset 0 0px 6px 4px $second-player-2;
+
+      &::before {
+        background: $second-player;
+        box-shadow: inset 0 0px 6px 4px $second-player-2;
+        animation-duration: 1s;
+        animation-name: cell;
+      }
+    }
+
+    &_win {
+      &::before {
+        // content: "";
+        background-image: url("../../../public/images/star.png");
+        background-size: 50px;
+        background-repeat: no-repeat;
+        background-position: 50%;
+      }
+    }
+  }
+}
