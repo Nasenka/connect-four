@@ -1,0 +1,63 @@
+@import "../../scss/variables.scss";
+
+.player {
+  position: relative;
+  color: #ffffff;
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 20px 12px;
+    border: 6px solid $blue-gem;
+    border-radius: 30px;
+    background: $blue-marguerite;
+  }
+
+  &__color {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+
+    &-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 30px;
+      background: $blue-gem;
+      width: 140px;
+      height: 140px;
+    }
+  }
+
+  &__number {
+    font-size: 20px;
+  }
+
+  &__wins {
+    font-size: 16px;
+  }
+
+  &__turn {
+    position: absolute;
+    left: 0;
+    bottom: -40px;
+    width: 100%;
+    text-align: center;
+  }
+
+  &_first {
+    .player__color {
+      background: $first-player;
+      box-shadow: inset 0 0px 6px 4px $first-player-2;
+    }
+  }
+
+  &_second {
+    .player__color {
+      background: $second-player;
+      box-shadow: inset 0 0px 6px 4px $second-player-2;
+    }
+  }
+}
