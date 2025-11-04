@@ -1,34 +1,26 @@
 import classnames from "classnames";
 import "./Board.scss";
-import { Player, BoardState } from "../../types";
-import { useState } from "react";
+import { Player, BoardState, Winner } from "../../types";
 import getWinningCells from "../../core/getWinningCells";
 
-// Кнопка сброса
-// Считать количетсво побед
-// Отмена шага
-// Таймер
-
 interface BoardProps {
+  board: BoardState;
   currentPlayer: Player;
-  onChangePlayer: () => void;
+  winner: Winner | null;
+  onEndTurn: (newBoard: BoardState) => void;
+  onReset: () => void;
+  onWin: (winningCells: number[][]) => void;
 }
 
-const ROWS = 6;
-const COLS = 7;
-const BOARD = Array(COLS)
-  .fill(null)
-  .map(() => Array(ROWS).fill(null));
-
-function Board({ currentPlayer, onChangePlayer }: BoardProps) {
-  const [board, setBoard] = useState<BoardState>(BOARD);
-  const [winner, setWinner] = useState<Player>();
-  const [winningCells, setWinningCells] = useState<number[][]>([]);
-  // Сделать один общий объект с победителем и его ячейками
-
+function Board({
+  board,
+  currentPlayer,
+  winner,
+  onEndTurn,
+  onReset,
+  onWin,
+}: BoardProps) {
   const handleColClick = (colIndex: number) => {
-    if (winner) return;
-
     const newBoard = [...board];
     const lastIndex = newBoard[colIndex].findIndex((item) => item !== null);
     let rowIndex: number | null = null;
@@ -42,22 +34,23 @@ function Board({ currentPlayer, onChangePlayer }: BoardProps) {
     if (rowIndex >= 0) {
       newBoard[colIndex][rowIndex] = currentPlayer;
 
-      setBoard(newBoard);
-
       const winningCells = getWinningCells(
         newBoard,
         colIndex,
         rowIndex,
         currentPlayer
       );
-      setWinningCells(winningCells);
 
       if (winningCells.length) {
-        setWinner(currentPlayer);
-      } else {
-        onChangePlayer();
+        onWin(winningCells);
       }
+
+      onEndTurn(newBoard);
     }
+  };
+
+  const handleResetGame = () => {
+    onReset();
   };
 
   const renderCell = (cell: Player | null): React.ReactNode => {
@@ -69,42 +62,54 @@ function Board({ currentPlayer, onChangePlayer }: BoardProps) {
   };
 
   return (
-    <div className={classnames("board", { board_disabled: winner })}>
-      {board.map((col, colIndex) => (
-        <button
-          className={classnames("board__col", {
-            board__col_first: currentPlayer === Player.FIRST,
-            board__col_second: currentPlayer === Player.SECOND,
-          })}
-          key={colIndex}
-          onClick={() => handleColClick(colIndex)}
-          disabled={board[colIndex][0] ? true : false}
-        >
-          {col.map((cell, cellIndex) => {
-            let isWinningCell = false;
+    <div className="board__wrapper">
+      {winner ? (
+        <div className="board__winner">Победил игрок {winner.player}!</div>
+      ) : null}
+      <div className={classnames("board", { board_disabled: winner })}>
+        {board.map((col, colIndex) => (
+          <button
+            className={classnames("board__col", {
+              board__col_first: currentPlayer === Player.FIRST,
+              board__col_second: currentPlayer === Player.SECOND,
+            })}
+            key={colIndex}
+            onClick={() => handleColClick(colIndex)}
+            disabled={board[colIndex][0] ? true : false}
+          >
+            {col.map((cell, cellIndex) => {
+              let isWinningCell = false;
 
-            for (const coord of winningCells) {
-              if (coord[0] === colIndex && coord[1] === cellIndex) {
-                isWinningCell = true;
+              if (winner) {
+                for (const coord of winner.winningCells) {
+                  if (coord[0] === colIndex && coord[1] === cellIndex) {
+                    isWinningCell = true;
+                  }
+                }
               }
-            }
 
-            return (
-              <div
-                className={classnames("board__cell", {
-                  board__cell_empty: cell === null,
-                  board__cell_first: cell === Player.FIRST,
-                  board__cell_second: cell === Player.SECOND,
-                  board__cell_win: isWinningCell,
-                })}
-                key={cellIndex}
-              >
-                {renderCell(cell)}
-              </div>
-            );
-          })}
+              return (
+                <div
+                  className={classnames("board__cell", {
+                    board__cell_empty: cell === null,
+                    board__cell_first: cell === Player.FIRST,
+                    board__cell_second: cell === Player.SECOND,
+                    board__cell_win: isWinningCell,
+                  })}
+                  key={cellIndex}
+                >
+                  {renderCell(cell)}
+                </div>
+              );
+            })}
+          </button>
+        ))}
+      </div>
+      <div className="board__buttons">
+        <button className="board__button" onClick={handleResetGame}>
+          Сбросить игру
         </button>
-      ))}
+      </div>
     </div>
   );
 }

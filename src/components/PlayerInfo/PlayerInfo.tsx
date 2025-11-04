@@ -3,11 +3,18 @@ import "./PlayerInfo.scss";
 import { Player } from "../../types";
 
 interface PlayerInfoProps {
-  player: string;
   currentPlayer: string;
+  player: string;
+  timeLeft: string;
+  wins: number;
 }
 
-function PlayerInfo({ player, currentPlayer }: PlayerInfoProps) {
+function PlayerInfo({
+  currentPlayer,
+  player,
+  timeLeft,
+  wins,
+}: PlayerInfoProps) {
   return (
     <div
       className={classnames("player", {
@@ -15,12 +22,15 @@ function PlayerInfo({ player, currentPlayer }: PlayerInfoProps) {
         player_second: player === Player.SECOND,
       })}
     >
+      {player === currentPlayer ? (
+        <div className="player__timer">{timeLeft}</div>
+      ) : null}
       <div className="player__wrapper">
         <div className="player__color-wrapper">
           <div className="player__color" />
         </div>
         <div className="player__number">Игрок {player}</div>
-        {/* <div className="player__wins">Побед: 1</div> */}
+        <div className="player__wins">Побед: {wins}</div>
       </div>
       {player === currentPlayer ? (
         <div className="player__turn">Ход игрока {player}</div>
