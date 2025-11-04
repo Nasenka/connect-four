@@ -1,0 +1,21 @@
+@mixin player-first {
+  background: $first-player-primary;
+  box-shadow: inset 0 0 6px 4px $first-player-secondary;
+}
+
+@mixin player-second {
+  background: $second-player-primary;
+  box-shadow: inset 0 0 6px 4px $second-player-secondary;
+}
+
+@mixin flex-row($row-gap, $col-gap) {
+  display: flex;
+  flex-direction: row;
+  gap: $row-gap $col-gap;
+}
+
+@mixin flex-col($row-gap, $col-gap) {
+  display: flex;
+  flex-direction: column;
+  gap: $row-gap $col-gap;
+}

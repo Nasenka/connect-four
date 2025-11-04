@@ -1,0 +1,13 @@
+@import "../../scss/variables.scss";
+
+.game {
+  width: 1360px;
+  margin: 160px auto;
+
+  &__wrapper {
+    display: grid;
+    grid-template-columns: 200px 3fr 200px;
+    align-items: center;
+    gap: 40px;
+  }
+}

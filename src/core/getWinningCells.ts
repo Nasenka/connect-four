@@ -47,9 +47,6 @@ const getWinningCells = (
       ...coordsInDirection(-rowStep, -colStep),
     ];
 
-    // Отсортировать ячейки
-
-    // если подряд 4 или больше — вернуть координаты
     if (totalCoords.length >= 4) {
       return totalCoords;
     }
